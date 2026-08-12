@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
+import { submitCustomRequest } from '../services/customRequest'
 
 const uses = ['游戏', '工作', '视频剪辑', '编程', '办公', '日常']
 const budgets = Array.from({ length: 100 }, (_, index) => `￥${index + 1}000`)
@@ -9,6 +10,8 @@ const selectedUses = ref([])
 const selectedBudgets = ref([])
 const selectedBrands = ref([])
 const hasIssue = ref('否')
+const submitting = ref(false)
+const submitMessage = ref('')
 
 const summary = computed(() => [
   `用途：${selectedUses.value.length ? selectedUses.value.join('、') : '未选择'}`,
@@ -17,10 +20,25 @@ const summary = computed(() => [
   `是否为故障排查：${hasIssue.value}`,
 ].join('\n'))
 
-function submitRequest() {
-  const subject = '电脑配置调试需求'
-  const body = `你好，我想咨询电脑配置调试服务。\n\n${summary.value}\n\n补充说明：\n`
-  window.location.href = `mailto:tiankangrong46@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+async function submitRequest() {
+  submitting.value = true
+  submitMessage.value = ''
+  try {
+    await submitCustomRequest({
+      service: 'computer',
+      selections: {
+        '用途': selectedUses.value,
+        '预算范围': selectedBudgets.value,
+        '品牌偏好': selectedBrands.value,
+        '是否为故障排查': hasIssue.value,
+      },
+    })
+    submitMessage.value = '需求已发送，我会尽快查看。'
+  } catch (error) {
+    submitMessage.value = error.message
+  } finally {
+    submitting.value = false
+  }
 }
 </script>
 
@@ -76,7 +94,8 @@ function submitRequest() {
           </div>
         </fieldset>
 
-        <button class="computer-submit" type="submit">提交配置需求 <span aria-hidden="true">↗</span></button>
+        <button class="computer-submit" type="submit" :disabled="submitting">{{ submitting ? '正在发送...' : '提交配置需求' }} <span aria-hidden="true">↗</span></button>
+        <p v-if="submitMessage" class="submit-message">{{ submitMessage }}</p>
       </form>
     </section>
   </main>

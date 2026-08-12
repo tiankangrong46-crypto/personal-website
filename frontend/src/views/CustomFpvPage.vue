@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
+import { submitCustomRequest } from '../services/customRequest'
 
 const sizes = ['65mm', '75mm', '85mm', '2inch', '2.5inch', '3inch', '3.5inch', '4inch', '5inch', '6inch', '7inch']
 const uses = ['竞速', '花飞', '拍摄', '老年飞']
@@ -11,6 +12,8 @@ const selectedUses = ref([])
 const selectedBudgets = ref([])
 const selectedVideoSystems = ref([])
 const hasIssue = ref('否')
+const submitting = ref(false)
+const submitMessage = ref('')
 
 const summary = computed(() => [
   `尺寸：${selectedSizes.value.length ? selectedSizes.value.join('、') : '未选择'}`,
@@ -20,10 +23,26 @@ const summary = computed(() => [
   `是否为故障排查：${hasIssue.value}`,
 ].join('\n'))
 
-function submitRequest() {
-  const subject = '穿越机配置定制需求'
-  const body = `你好，我想咨询穿越机配置定制服务。\n\n${summary.value}\n\n补充说明：\n`
-  window.location.href = `mailto:tiankangrong46@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+async function submitRequest() {
+  submitting.value = true
+  submitMessage.value = ''
+  try {
+    await submitCustomRequest({
+      service: 'fpv',
+      selections: {
+        '尺寸': selectedSizes.value,
+        '用途': selectedUses.value,
+        '预算范围': selectedBudgets.value,
+        '图传系统': selectedVideoSystems.value,
+        '是否为故障排查': hasIssue.value,
+      },
+    })
+    submitMessage.value = '需求已发送，我会尽快查看。'
+  } catch (error) {
+    submitMessage.value = error.message
+  } finally {
+    submitting.value = false
+  }
 }
 </script>
 
@@ -69,7 +88,8 @@ function submitRequest() {
             <label v-for="item in ['是', '否']" :key="item" class="choice-chip"><input v-model="hasIssue" type="radio" name="has-issue" :value="item" /><span>{{ item }}</span></label>
           </div>
         </fieldset>
-        <button class="computer-submit" type="submit">提交配置需求 <span aria-hidden="true">↗</span></button>
+        <button class="computer-submit" type="submit" :disabled="submitting">{{ submitting ? '正在发送...' : '提交配置需求' }} <span aria-hidden="true">↗</span></button>
+        <p v-if="submitMessage" class="submit-message">{{ submitMessage }}</p>
       </form>
     </section>
   </main>

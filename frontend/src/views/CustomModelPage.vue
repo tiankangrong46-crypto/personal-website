@@ -1,9 +1,12 @@
 <script setup>
 import { computed, ref } from 'vue'
+import { submitCustomRequest } from '../services/customRequest'
 
 const selectedFile = ref(null)
 const request = ref('')
 const fileInput = ref(null)
+const submitting = ref(false)
+const submitMessage = ref('')
 const fileLabel = computed(() => selectedFile.value?.name || '选择参考图片')
 
 function onFileChange(event) {
@@ -14,13 +17,24 @@ function chooseFile() {
   fileInput.value?.click()
 }
 
-function submitRequest() {
-  const subject = '3D 模型定制需求'
-  const fileInfo = selectedFile.value
-    ? `参考图片文件：${selectedFile.value.name}\n请在打开的邮件中手动附上此图片。`
-    : '参考图片文件：未选择'
-  const body = `你好，我想咨询 3D 模型定制服务。\n\n${fileInfo}\n\n打印需求与形状描述：\n${request.value || '未填写'}\n`
-  window.location.href = `mailto:tiankangrong46@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+async function submitRequest() {
+  submitting.value = true
+  submitMessage.value = ''
+  try {
+    await submitCustomRequest({
+      service: 'model',
+      selections: {
+        '打印需求与形状描述': request.value,
+        '参考图片': selectedFile.value?.name || '未上传',
+      },
+      file: selectedFile.value,
+    })
+    submitMessage.value = '需求已发送，我会尽快查看。'
+  } catch (error) {
+    submitMessage.value = error.message
+  } finally {
+    submitting.value = false
+  }
 }
 </script>
 
@@ -45,8 +59,9 @@ function submitRequest() {
           <span class="model-label">描述打印需求 <small>形状、尺寸、用途或其他细节</small></span>
           <textarea id="model-description" v-model="request" placeholder="例如：需要一款适配桌面的耳机支架，主体为圆角，预留 30mm 固定孔位。"></textarea>
         </label>
-        <p class="attachment-note">提交后会打开邮件客户端。请将选中的图片作为附件加入邮件后发送。</p>
-        <button class="computer-submit" type="submit">提交模型需求 <span aria-hidden="true">↗</span></button>
+        <p class="attachment-note">参考图会作为附件随需求一并发送，单张图片最大 5MB。</p>
+        <button class="computer-submit" type="submit" :disabled="submitting">{{ submitting ? '正在发送...' : '提交模型需求' }} <span aria-hidden="true">↗</span></button>
+        <p v-if="submitMessage" class="submit-message">{{ submitMessage }}</p>
       </form>
     </section>
   </main>
