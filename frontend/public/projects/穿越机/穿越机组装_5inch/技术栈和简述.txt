@@ -1,0 +1,4 @@
+##技术栈：
+Fusion360；Creality Print；betaflight；Blheli32；bluejay；焊接；pid control；gyro
+##简述：
+5寸穿越机组装

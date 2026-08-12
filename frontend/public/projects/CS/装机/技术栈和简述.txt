@@ -1,0 +1,4 @@
+##技术栈：
+bios，activte system，drivers installs
+##简述：
+就装电脑然后绕过防护激活系统

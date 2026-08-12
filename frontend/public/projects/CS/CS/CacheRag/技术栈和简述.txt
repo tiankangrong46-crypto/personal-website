@@ -1,0 +1,4 @@
+##技术栈：
+SQLite，python，lmstudio，langchain
+##简述：
+依照qwen35bA3B模型搭建的拥有即时缓存的rag兼知识库系统，通过缓存命中与否来减少token消耗量

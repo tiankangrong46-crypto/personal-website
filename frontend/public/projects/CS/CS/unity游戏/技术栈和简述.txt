@@ -1,0 +1,4 @@
+##技术栈：
+C#，unity2D，2D Physics，Animator，tilemap，pixelart
+##简述：
+unity2d平面游戏，打怪，可选难度，不同界面，不同hitbox，手绘动画，无限地图

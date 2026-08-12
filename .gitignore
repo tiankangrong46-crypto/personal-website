@@ -1,0 +1,21 @@
+# Python and Django local state
+.venv/
+__pycache__/
+*.py[cod]
+db.sqlite3
+
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+frontend/*.local
+
+# Local work and generated output
+outputs/
+work/
+*.log
+
+# Editor and system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

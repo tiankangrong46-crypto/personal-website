@@ -1,0 +1,4 @@
+##技术栈：
+ollama，lm studio，docker
+##简述：
+本地部署qwen多模态模型用于实验和开发，探索新功能

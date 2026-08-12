@@ -1,0 +1,5 @@
+##技术栈：
+betaflight；Fusion360；Bluejay；Creality Print；焊接
+##简述：
+这是一个全3d打印的4英寸穿越机机架，整机重270克（带电池桨叶）
+机臂使用pla+打印，确保硬度，顶板和底板使用petg打印确保韧性
