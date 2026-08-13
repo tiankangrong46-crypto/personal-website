@@ -1,5 +1,7 @@
 const recipient = 'tiankangrong46@gmail.com'
 const maxImageSize = 5 * 1024 * 1024
+const maxTotalImageSize = 20 * 1024 * 1024
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function headers() {
   return {
@@ -52,21 +54,31 @@ export async function onRequestPost({ request, env }) {
   const email = buildEmail(formData.get('service'), selections)
   if (!email) return json({ error: '提交内容不完整。' }, 400)
 
+  const contactEmail = String(formData.get('contactEmail') || '').trim()
+  if (!emailPattern.test(contactEmail)) {
+    return json({ error: '请填写有效的联系邮箱。' }, 400)
+  }
+
   const message = {
     from: env.EMAIL_FROM,
     to: [recipient],
     subject: email.title,
     text: email.text,
+    reply_to: contactEmail,
   }
-  const image = formData.get('referenceImage')
-  if (image instanceof File && image.size > 0) {
-    if (!image.type.startsWith('image/') || image.size > maxImageSize) {
+  const images = formData.getAll('referenceImage').filter((image) => image instanceof File && image.size > 0)
+  if (images.length) {
+    const totalImageSize = images.reduce((total, image) => total + image.size, 0)
+    if (totalImageSize > maxTotalImageSize || images.some((image) => !image.type.startsWith('image/') || image.size > maxImageSize)) {
       return json({ error: '参考图必须是 5MB 以内的图片文件。' }, 400)
     }
-    const bytes = new Uint8Array(await image.arrayBuffer())
-    let binary = ''
-    for (const byte of bytes) binary += String.fromCharCode(byte)
-    message.attachments = [{ filename: image.name, content: btoa(binary) }]
+    message.attachments = []
+    for (const image of images) {
+      const bytes = new Uint8Array(await image.arrayBuffer())
+      let binary = ''
+      for (const byte of bytes) binary += String.fromCharCode(byte)
+      message.attachments.push({ filename: image.name, content: btoa(binary) })
+    }
   }
 
   const result = await fetch('https://api.resend.com/emails', {

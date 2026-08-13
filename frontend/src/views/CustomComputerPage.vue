@@ -10,6 +10,7 @@ const selectedUses = ref([])
 const selectedBudgets = ref([])
 const selectedBrands = ref([])
 const hasIssue = ref('否')
+const contactEmail = ref('')
 const submitting = ref(false)
 const submitMessage = ref('')
 
@@ -32,6 +33,7 @@ async function submitRequest() {
         '品牌偏好': selectedBrands.value,
         '是否为故障排查': hasIssue.value,
       },
+      contactEmail: contactEmail.value,
     })
     submitMessage.value = '需求已发送，我会尽快查看。'
   } catch (error) {
@@ -94,6 +96,10 @@ async function submitRequest() {
           </div>
         </fieldset>
 
+        <label class="contact-email-field">
+          <span>联系邮箱 <small>回复会发送到此邮箱</small></span>
+          <input v-model.trim="contactEmail" type="email" autocomplete="email" required placeholder="name@example.com" />
+        </label>
         <button class="computer-submit" type="submit" :disabled="submitting">{{ submitting ? '正在发送...' : '提交配置需求' }} <span aria-hidden="true">↗</span></button>
         <p v-if="submitMessage" class="submit-message">{{ submitMessage }}</p>
       </form>

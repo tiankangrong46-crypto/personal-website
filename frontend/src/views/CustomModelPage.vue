@@ -2,15 +2,20 @@
 import { computed, ref } from 'vue'
 import { submitCustomRequest } from '../services/customRequest'
 
-const selectedFile = ref(null)
+const selectedFiles = ref([])
 const request = ref('')
 const fileInput = ref(null)
 const submitting = ref(false)
 const submitMessage = ref('')
-const fileLabel = computed(() => selectedFile.value?.name || '选择参考图片')
+const fileLabel = computed(() => {
+  if (!selectedFiles.value.length) return '选择参考图片'
+  if (selectedFiles.value.length === 1) return selectedFiles.value[0].name
+  return `已选择 ${selectedFiles.value.length} 张图片`
+})
+const contactEmail = ref('')
 
 function onFileChange(event) {
-  selectedFile.value = event.target.files?.[0] || null
+  selectedFiles.value = Array.from(event.target.files || [])
 }
 
 function chooseFile() {
@@ -25,9 +30,10 @@ async function submitRequest() {
       service: 'model',
       selections: {
         '打印需求与形状描述': request.value,
-        '参考图片': selectedFile.value?.name || '未上传',
+        '参考图片': selectedFiles.value.length ? selectedFiles.value.map((file) => file.name) : '未上传',
       },
-      file: selectedFile.value,
+      contactEmail: contactEmail.value,
+      files: selectedFiles.value,
     })
     submitMessage.value = '需求已发送，我会尽快查看。'
   } catch (error) {
@@ -51,15 +57,19 @@ async function submitRequest() {
 
       <form class="model-request-form" @submit.prevent="submitRequest">
         <div class="model-field">
-          <span class="model-label">导入参考图片 <small>仅支持图片格式</small></span>
-          <input ref="fileInput" accept="image/*" type="file" @change="onFileChange" />
+          <span class="model-label">导入参考图片 <small>仅支持图片格式，可一次选择多张</small></span>
+          <input ref="fileInput" accept="image/*" multiple type="file" @change="onFileChange" />
           <button class="file-picker" type="button" @click="chooseFile"><span>{{ fileLabel }}</span><b>选择图片 ↗</b></button>
         </div>
         <label class="model-field" for="model-description">
           <span class="model-label">描述打印需求 <small>形状、尺寸、用途或其他细节</small></span>
           <textarea id="model-description" v-model="request" placeholder="例如：需要一款适配桌面的耳机支架，主体为圆角，预留 30mm 固定孔位。"></textarea>
         </label>
-        <p class="attachment-note">参考图会作为附件随需求一并发送，单张图片最大 5MB。</p>
+        <label class="contact-email-field">
+          <span>联系邮箱 <small>回复会发送到此邮箱</small></span>
+          <input v-model.trim="contactEmail" type="email" autocomplete="email" required placeholder="name@example.com" />
+        </label>
+        <p class="attachment-note">参考图会作为附件随需求一并发送，单张图片最大 5MB，全部图片合计最大 20MB。</p>
         <button class="computer-submit" type="submit" :disabled="submitting">{{ submitting ? '正在发送...' : '提交模型需求' }} <span aria-hidden="true">↗</span></button>
         <p v-if="submitMessage" class="submit-message">{{ submitMessage }}</p>
       </form>

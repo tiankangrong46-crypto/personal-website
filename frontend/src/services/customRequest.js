@@ -1,11 +1,12 @@
 const endpoint = '/api/custom-request'
 
-export async function submitCustomRequest({ service, selections, file }) {
+export async function submitCustomRequest({ service, selections, contactEmail, files = [] }) {
   const payload = new FormData()
   payload.append('service', service)
   payload.append('selections', JSON.stringify(selections))
+  payload.append('contactEmail', contactEmail)
 
-  if (file) payload.append('referenceImage', file)
+  files.filter(Boolean).forEach((file) => payload.append('referenceImage', file))
 
   const response = await fetch(endpoint, { method: 'POST', body: payload })
   const result = await response.json().catch(() => ({}))
