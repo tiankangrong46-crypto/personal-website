@@ -7,7 +7,10 @@
       <RouterLink to="/custom">定制</RouterLink>
       <RouterLink to="/contact">联系</RouterLink>
     </nav>
-    <RouterLink class="header-note" to="/contact">联系劳资</RouterLink>
+    <div :key="$route.path" :class="{ 'nav-entry': ['/', '/showcase', '/custom', '/contact'].includes($route.path) }" class="header-actions">
+      <RouterLink class="header-note" to="/contact">联系劳资</RouterLink>
+      <a class="header-note" href="https://pconfig.tkr-studio.com">弄台电脑</a>
+    </div>
   </header>
 
   <RouterView />

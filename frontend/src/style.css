@@ -15,9 +15,10 @@ nav { display: flex; gap: 34px; }
 nav a { border-bottom: 2px solid transparent; font-size: 16px; padding: 11px 1px; }
 nav a.router-link-exact-active { border-color: #44343b; }
 nav a:hover, .header-note:hover, .text-link:hover { color: #c85e7a; }
-.header-note { justify-self: end; }
+.header-actions { display: flex; gap: 22px; justify-self: end; }.header-note { white-space: nowrap; }
 .nav-entry a { animation: nav-entry .52s ease both; }
 .nav-entry a:nth-child(1) { animation-delay: .06s; }.nav-entry a:nth-child(2) { animation-delay: .12s; }.nav-entry a:nth-child(3) { animation-delay: .18s; }.nav-entry a:nth-child(4) { animation-delay: .24s; }
+.header-actions.nav-entry a:nth-child(1) { animation-delay: .3s; }.header-actions.nav-entry a:nth-child(2) { animation-delay: .36s; }
 .page { min-height: calc(100svh - 88px); }
 .hero-section, .page-intro, .project-list, .custom-page, .contact-section { padding-left: 4.5vw; padding-right: 4.5vw; }
 .hero-section { display: grid; gap: 7vw; grid-template-columns: minmax(280px, .8fr) minmax(350px, 1.2fr); min-height: calc(100svh - 70px); padding-bottom: 7vw; padding-top: 9vw; }
@@ -183,7 +184,7 @@ h1 { font-family: 'Instrument Serif', 'Songti SC', serif; font-size: clamp(52px,
 .contact-footer { border-top: 1px solid #745861; display: flex; justify-content: space-between; margin-top: 11vw; padding-top: 13px; }
 @media (max-width: 720px) {
   .site-header { grid-template-columns: 1fr auto; min-height: auto; padding: 18px 20px; }
-  .header-note { display: none; } nav { gap: 14px; } nav a { font-size: 13px; }
+  .header-actions { display: none; } nav { gap: 14px; } nav a { font-size: 13px; }
   .page { min-height: calc(100svh - 56px); }
   .hero-section, .page-intro, .project-list, .custom-page, .contact-section { padding-left: 20px; padding-right: 20px; }
   .hero-section { display: flex; flex-direction: column; gap: 54px; min-height: auto; padding-bottom: 78px; padding-top: 76px; }
