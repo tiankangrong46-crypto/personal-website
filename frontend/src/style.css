@@ -184,7 +184,7 @@ h1 { font-family: 'Instrument Serif', 'Songti SC', serif; font-size: clamp(52px,
 .contact-link span { font-family: 'Manrope', sans-serif; font-size: .64em; margin-left: 18px; }
 .contact-footer { border-top: 1px solid #745861; display: flex; justify-content: space-between; margin-top: 11vw; padding-top: 13px; }
 @media (max-width: 720px) {
-  .site-header { column-gap: 0; grid-template-columns: 1fr; min-height: auto; padding: 18px 20px 12px; row-gap: 14px; }.site-header .brand { margin-left: 0; }.site-header .locale-switch { left: auto; right: 20px; }.site-header nav { display: grid; gap: 0; grid-column: 1; grid-template-columns: repeat(5, minmax(0, 1fr)); width: 100%; }.site-header nav a { font-size: 12px; overflow-wrap: anywhere; padding: 8px 2px; text-align: center; }.site-header nav .mobile-yzbj { display: block; }
+  .site-header { column-gap: 0; grid-template-columns: 1fr; min-height: auto; padding: 18px 20px 12px; row-gap: 14px; }.site-header .brand { line-height: 1.4; margin-left: 0; }.site-header .locale-switch { left: auto; right: 20px; top: 18px; transform: none; }.site-header nav { display: grid; gap: 0; grid-column: 1; grid-template-columns: repeat(5, minmax(0, 1fr)); width: 100%; }.site-header nav a { font-size: 12px; overflow-wrap: anywhere; padding: 8px 2px; text-align: center; }.site-header nav .mobile-yzbj { display: block; }
   .header-actions { display: none; } nav { gap: 14px; } nav a { font-size: 13px; }
   .page { min-height: calc(100svh - 56px); }
   .hero-section, .page-intro, .project-list, .custom-page, .contact-section { padding-left: 20px; padding-right: 20px; }
