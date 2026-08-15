@@ -7,6 +7,12 @@ import { locale } from '../locale'
 const props = defineProps({ category: { type: String, required: true } })
 const category = computed(() => categories[props.category])
 const projects = computed(() => withImages(props.category))
+const englishProjects = {
+  cs: [['CacheRag', 'A Qwen-based local RAG knowledge base with caching to reduce token use.'], ['LocalAI', 'Local multimodal Qwen deployment for experiments and practical development.'], ['Unity 2D Game', 'A 2D action game with hand-drawn animation, collisions, and an endless map.'], ['PC Setup & System Configuration', 'Desktop assembly, BIOS initialization, operating system, and driver setup.']],
+  design: [['4-inch Fully Printed FPV', 'A fully 3D-printed 4-inch FPV frame balancing stiffness, resilience, and weight.'], ['Airsoft Payload Bay', 'A flight-controller-linked payload bay actuated through a servo module.'], ['Cyberpunk Mantis Blades', 'A wearable Halloween prop built around an ESP32-S3 control board.'], ['Display / Tablet Stand', 'An adjustable PETG stand for displays, tablets, and desk mounting.'], ['Drone Timed Drop', 'A timed or servo-controlled drone release mechanism.'], ['Desktop Bin', 'A compact 3D-printed desktop bin for common bag sizes.'], ['Collectible Stand', 'A display and storage stand for standard boxed collectibles.']],
+  fpv: [['Soldering Showcase', 'Electronic assembly, clean wiring, and soldering work for FPV systems.'], ['3-inch FPV Build', 'Structure, electronics, firmware, and PID tuning for a compact FPV platform.'], ['5-inch FPV Build', 'Complete assembly and flight-controller tuning for a standard 5-inch FPV platform.']],
+}
+const displayProjects = computed(() => projects.value.map((project, index) => locale.value === 'en' ? { ...project, name: englishProjects[props.category][index][0], description: englishProjects[props.category][index][1] } : project))
 const header = computed(() => {
   const en = { cs: ['Computer Science', 'From local AI to real-time applications, focused on useful systems.'], design: ['Design', 'From modeling and printing to assembly and testing.'], fpv: ['FPV', 'From soldering to firmware and flight-controller tuning.'] }
   return locale.value === 'en' ? en[props.category] : [category.value.name, category.value.description]
@@ -16,14 +22,14 @@ const header = computed(() => {
 <template>
   <main class="page category-page">
     <section class="category-header">
-      <RouterLink class="back-link" to="/showcase">← 返回展示</RouterLink>
+      <RouterLink class="back-link" to="/showcase">{{ locale === 'en' ? '← Back to showcase' : '← 返回展示' }}</RouterLink>
       <p class="eyebrow">{{ category.kicker }}</p>
       <h1>{{ header[0] }}</h1>
       <p>{{ header[1] }}</p>
     </section>
 
-    <section class="project-cards" :aria-label="`${category.name} 项目`">
-      <article v-for="project in projects" :key="project.name" v-reveal class="project-card">
+    <section class="project-cards" :aria-label="`${header[0]} projects`">
+      <article v-for="project in displayProjects" :key="project.name" v-reveal class="project-card">
         <div v-if="project.images.length" class="project-cover">
           <img :src="project.images[0]" :alt="`${project.name} 项目封面`" />
         </div>
@@ -33,13 +39,13 @@ const header = computed(() => {
           <div class="card-details">
             <p>{{ project.description }}</p>
             <div class="stack-wrap">
-              <span>TECH STACK / 技术栈</span>
-              <ul class="stack-list" aria-label="技术栈"><li v-for="item in project.stack" :key="item">{{ item }}</li></ul>
+              <span>{{ locale === 'en' ? 'TECH STACK' : 'TECH STACK / 技术栈' }}</span>
+              <ul class="stack-list" :aria-label="locale === 'en' ? 'Technology stack' : '技术栈'"><li v-for="item in project.stack" :key="item">{{ item }}</li></ul>
             </div>
           </div>
         </div>
         <ProjectGallery v-if="project.images.length > 1" :images="project.images.slice(1)" :project-name="project.name" />
-        <div v-else class="project-gallery gallery-placeholder" aria-label="图库待补充"><span>图库待补充</span><i></i><i></i><i></i></div>
+        <div v-else class="project-gallery gallery-placeholder" :aria-label="locale === 'en' ? 'Gallery coming soon' : '图库待补充'"><span>{{ locale === 'en' ? 'GALLERY COMING SOON' : '图库待补充' }}</span><i></i><i></i><i></i></div>
       </article>
     </section>
   </main>
