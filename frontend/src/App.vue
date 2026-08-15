@@ -21,6 +21,7 @@ const labels = computed(() => locale.value === 'en'
       <RouterLink to="/showcase">{{ labels.showcase }}</RouterLink>
       <RouterLink to="/custom">{{ labels.custom }}</RouterLink>
       <RouterLink to="/contact">{{ labels.contact }}</RouterLink>
+      <a class="mobile-yzbj" href="https://yzbjfpv.top">{{ labels.yzbj }}</a>
     </nav>
     <div :key="$route.path" :class="{ 'nav-entry': ['/', '/showcase', '/custom', '/contact'].includes($route.path) }" class="header-actions">
       <a class="header-note" href="https://yzbjfpv.top">{{ labels.yzbj }}</a>

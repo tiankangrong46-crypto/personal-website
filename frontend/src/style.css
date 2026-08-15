@@ -13,7 +13,7 @@ a { color: inherit; }
 .brand span { color: #dc7d95; margin: 0 3px; }
 .locale-switch { align-items: center; display: flex; gap: 5px; left: 4.5vw; position: absolute; top: 50%; transform: translateY(-50%); }.locale-switch button, .locale-switch span { color: #99747e; font-family: 'DM Mono', monospace; font-size: 11px; }.locale-switch button { background: transparent; border: 0; cursor: pointer; padding: 5px 1px; transition: color .2s ease, transform .2s ease; }.locale-switch button:hover { color: #c85e7a; transform: translateY(-1px); }.locale-switch button.is-active { color: #44343b; font-weight: 500; }
 nav { display: flex; gap: 34px; }
-nav a { border-bottom: 2px solid transparent; font-size: 16px; padding: 11px 1px; }
+nav a { border-bottom: 2px solid transparent; font-size: 16px; padding: 11px 1px; }.mobile-yzbj { display: none; }
 nav a.router-link-exact-active { border-color: #44343b; }
 nav a:hover, .header-note:hover, .text-link:hover { color: #c85e7a; }
 .header-actions { display: flex; gap: 22px; justify-self: end; }.header-note { white-space: nowrap; }
@@ -184,7 +184,7 @@ h1 { font-family: 'Instrument Serif', 'Songti SC', serif; font-size: clamp(52px,
 .contact-link span { font-family: 'Manrope', sans-serif; font-size: .64em; margin-left: 18px; }
 .contact-footer { border-top: 1px solid #745861; display: flex; justify-content: space-between; margin-top: 11vw; padding-top: 13px; }
 @media (max-width: 720px) {
-  .site-header { column-gap: 0; grid-template-columns: 1fr; min-height: auto; padding: 18px 20px 12px; row-gap: 14px; }.site-header .brand { margin-left: 73px; }.site-header nav { display: grid; gap: 0; grid-column: 1; grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; }.site-header nav a { font-size: 12px; overflow-wrap: anywhere; padding: 8px 2px; text-align: center; }
+  .site-header { column-gap: 0; grid-template-columns: 1fr; min-height: auto; padding: 18px 20px 12px; row-gap: 14px; }.site-header .brand { margin-left: 0; }.site-header .locale-switch { left: auto; right: 20px; }.site-header nav { display: grid; gap: 0; grid-column: 1; grid-template-columns: repeat(5, minmax(0, 1fr)); width: 100%; }.site-header nav a { font-size: 12px; overflow-wrap: anywhere; padding: 8px 2px; text-align: center; }.site-header nav .mobile-yzbj { display: block; }
   .header-actions { display: none; } nav { gap: 14px; } nav a { font-size: 13px; }
   .page { min-height: calc(100svh - 56px); }
   .hero-section, .page-intro, .project-list, .custom-page, .contact-section { padding-left: 20px; padding-right: 20px; }
