@@ -2,10 +2,15 @@
 import { computed } from 'vue'
 import { categories, withImages } from '../data/projects'
 import ProjectGallery from '../components/ProjectGallery.vue'
+import { locale } from '../locale'
 
 const props = defineProps({ category: { type: String, required: true } })
 const category = computed(() => categories[props.category])
 const projects = computed(() => withImages(props.category))
+const header = computed(() => {
+  const en = { cs: ['Computer Science', 'From local AI to real-time applications, focused on useful systems.'], design: ['Design', 'From modeling and printing to assembly and testing.'], fpv: ['FPV', 'From soldering to firmware and flight-controller tuning.'] }
+  return locale.value === 'en' ? en[props.category] : [category.value.name, category.value.description]
+})
 </script>
 
 <template>
@@ -13,8 +18,8 @@ const projects = computed(() => withImages(props.category))
     <section class="category-header">
       <RouterLink class="back-link" to="/showcase">← 返回展示</RouterLink>
       <p class="eyebrow">{{ category.kicker }}</p>
-      <h1>{{ category.name }}</h1>
-      <p>{{ category.description }}</p>
+      <h1>{{ header[0] }}</h1>
+      <p>{{ header[1] }}</p>
     </section>
 
     <section class="project-cards" :aria-label="`${category.name} 项目`">
