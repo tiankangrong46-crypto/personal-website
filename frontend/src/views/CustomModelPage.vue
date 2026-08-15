@@ -1,78 +1,11 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { submitCustomRequest } from '../services/customRequest'
-
-const selectedFiles = ref([])
-const request = ref('')
-const fileInput = ref(null)
-const submitting = ref(false)
-const submitMessage = ref('')
-const fileLabel = computed(() => {
-  if (!selectedFiles.value.length) return '选择参考图片'
-  if (selectedFiles.value.length === 1) return selectedFiles.value[0].name
-  return `已选择 ${selectedFiles.value.length} 张图片`
-})
-const contactEmail = ref('')
-
-function onFileChange(event) {
-  selectedFiles.value = Array.from(event.target.files || [])
-}
-
-function chooseFile() {
-  fileInput.value?.click()
-}
-
-async function submitRequest() {
-  submitting.value = true
-  submitMessage.value = ''
-  try {
-    await submitCustomRequest({
-      service: 'model',
-      selections: {
-        '打印需求与形状描述': request.value,
-        '参考图片': selectedFiles.value.length ? selectedFiles.value.map((file) => file.name) : '未上传',
-      },
-      contactEmail: contactEmail.value,
-      files: selectedFiles.value,
-    })
-    submitMessage.value = '需求已发送，我会尽快查看。'
-  } catch (error) {
-    submitMessage.value = error.message
-  } finally {
-    submitting.value = false
-  }
-}
+import { locale } from '../locale'
+const files=ref([]), request=ref(''), fileInput=ref(null), contactEmail=ref(''), submitting=ref(false), submitMessage=ref('')
+const t=computed(()=>locale.value==='en'?{back:'← Back to custom',title:'3D Model Custom Work',lead1:'3D model design from concept to finished object.',lead2:'Bring your idea to a printable result.',upload:'Reference images',uploadHint:'Images only, choose multiple files',choose:'Choose images →',desc:'Describe your request',descHint:'Shape, dimensions, purpose, and other details',placeholder:'Example: a rounded desktop headphone stand with a 30mm mounting hole.',email:'Contact email',emailHint:'Replies will be sent here',note:'Images are attached to the request. 5MB per image, 20MB total.',submit:'Submit model request',sending:'Sending...',success:'Request sent. I will get back to you soon.'}:{back:'← 返回定制',title:'3D 模型定制',lead1:'提供 3D 模型设计服务',lead2:'从概念到成品一步到位',upload:'导入参考图片',uploadHint:'仅支持图片格式，可一次选择多张',choose:'选择图片 →',desc:'描述打印需求',descHint:'形状、尺寸、用途或其他细节',placeholder:'例如：需要一款适配桌面的耳机支架，主体为圆角，预留 30mm 固定孔位。',email:'联系邮箱',emailHint:'回复会发送到此邮箱',note:'参考图会作为附件随需求一并发送，单张图片最大 5MB，全部图片合计最大 20MB。',submit:'提交模型需求',sending:'正在发送...',success:'需求已发送，我会尽快看看。'})
+const label=computed(()=>!files.value.length?(locale.value==='en'?'Select reference images':'选择参考图片'):files.value.length===1?files.value[0].name:(locale.value==='en'?`${files.value.length} images selected`:`已选择 ${files.value.length} 张图片`))
+function change(e){files.value=Array.from(e.target.files||[])}
+async function submit(){submitting.value=true;submitMessage.value='';try{await submitCustomRequest({service:'model',selections:{'需求描述 / Request':request.value,'参考图片 / Images':files.value.map(f=>f.name)},contactEmail:contactEmail.value,files:files.value});submitMessage.value=t.value.success}catch(e){submitMessage.value=e.message}finally{submitting.value=false}}
 </script>
-
-<template>
-  <main class="page custom-service-page model-service-page">
-    <RouterLink class="back-link" to="/custom">← 返回定制</RouterLink>
-    <section class="model-request-layout">
-      <div class="model-request-copy">
-        <p class="eyebrow">Custom service / 03</p>
-        <h1>3D 模型定制</h1>
-        <p>提供 3D 模型设计服务。</p>
-        <p>从概念到成品一步到位。</p>
-      </div>
-
-      <form class="model-request-form" @submit.prevent="submitRequest">
-        <div class="model-field">
-          <span class="model-label">导入参考图片 <small>仅支持图片格式，可一次选择多张</small></span>
-          <input ref="fileInput" accept="image/*" multiple type="file" @change="onFileChange" />
-          <button class="file-picker" type="button" @click="chooseFile"><span>{{ fileLabel }}</span><b>选择图片 ↗</b></button>
-        </div>
-        <label class="model-field" for="model-description">
-          <span class="model-label">描述打印需求 <small>形状、尺寸、用途或其他细节</small></span>
-          <textarea id="model-description" v-model="request" placeholder="例如：需要一款适配桌面的耳机支架，主体为圆角，预留 30mm 固定孔位。"></textarea>
-        </label>
-        <label class="contact-email-field">
-          <span>联系邮箱 <small>回复会发送到此邮箱</small></span>
-          <input v-model.trim="contactEmail" type="email" autocomplete="email" required placeholder="name@example.com" />
-        </label>
-        <p class="attachment-note">参考图会作为附件随需求一并发送，单张图片最大 5MB，全部图片合计最大 20MB。</p>
-        <button class="computer-submit" type="submit" :disabled="submitting">{{ submitting ? '正在发送...' : '提交模型需求' }} <span aria-hidden="true">↗</span></button>
-        <p v-if="submitMessage" class="submit-message">{{ submitMessage }}</p>
-      </form>
-    </section>
-  </main>
-</template>
+<template><main class="page custom-service-page model-service-page"><RouterLink class="back-link" to="/custom">{{t.back}}</RouterLink><section class="model-request-layout"><div class="model-request-copy"><p class="eyebrow">Custom service / 03</p><h1>{{t.title}}</h1><p>{{t.lead1}}</p><p>{{t.lead2}}</p></div><form class="model-request-form" @submit.prevent="submit"><div class="model-field"><span class="model-label">{{t.upload}} <small>{{t.uploadHint}}</small></span><input ref="fileInput" accept="image/*" multiple type="file" @change="change"/><button class="file-picker" type="button" @click="fileInput?.click()"><span>{{label}}</span><b>{{t.choose}}</b></button></div><label class="model-field"><span class="model-label">{{t.desc}} <small>{{t.descHint}}</small></span><textarea v-model="request" :placeholder="t.placeholder"/></label><label class="contact-email-field"><span>{{t.email}} <small>{{t.emailHint}}</small></span><input v-model.trim="contactEmail" type="email" required placeholder="name@example.com"/></label><p class="attachment-note">{{t.note}}</p><button class="computer-submit" :disabled="submitting">{{submitting?t.sending:t.submit}} <span>→</span></button><p v-if="submitMessage" class="submit-message">{{submitMessage}}</p></form></section></main></template>
