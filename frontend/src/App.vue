@@ -1,15 +1,11 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
+import { locale } from './locale'
 
-const locale = ref(localStorage.getItem('locale') === 'en' ? 'en' : 'zh')
 const labels = computed(() => locale.value === 'en'
   ? { home: 'HOME', showcase: 'SHOWCASE', custom: 'CUSTOM', contact: 'CONTACT', contactNote: 'GET IN TOUCH', pc: 'BUILD A PC' }
   : { home: '首页', showcase: '展示', custom: '定制', contact: '联系', contactNote: '联系劳资', pc: '弄台电脑' })
 
-watch(locale, (value) => {
-  localStorage.setItem('locale', value)
-  document.documentElement.lang = value === 'en' ? 'en' : 'zh-CN'
-}, { immediate: true })
 </script>
 
 <template>
