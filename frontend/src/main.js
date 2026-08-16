@@ -10,6 +10,7 @@ import CustomFpvPage from './views/CustomFpvPage.vue'
 import CustomModelPage from './views/CustomModelPage.vue'
 import ContactPage from './views/ContactPage.vue'
 import CategoryPage from './views/CategoryPage.vue'
+import ProjectDetailPage from './views/ProjectDetailPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -24,6 +25,7 @@ const router = createRouter({
     { path: '/cs', component: CategoryPage, props: { category: 'cs' } },
     { path: '/design', component: CategoryPage, props: { category: 'design' } },
     { path: '/fpv', component: CategoryPage, props: { category: 'fpv' } },
+    { path: '/projects/:slug', component: ProjectDetailPage, props: true },
   ],
   scrollBehavior() {
     return { top: 0 }
