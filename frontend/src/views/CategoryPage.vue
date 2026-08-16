@@ -50,9 +50,9 @@ const header = computed(() => {
     <p v-if="loading" class="page-state">Loading projects...</p><p v-else-if="error" class="page-state">Unable to load projects.</p><p v-else-if="!projects.length" class="page-state">No published projects yet.</p>
     <section v-else class="project-cards" :aria-label="`${header[0]} projects`">
       <article v-for="project in displayProjects" :key="project.name" v-reveal class="project-card">
-        <RouterLink v-if="project.cover_image_url" class="project-cover" :to="`/projects/${project.slug}`">
+        <div v-if="project.cover_image_url" class="project-cover">
           <img :src="project.cover_image_url" :alt="`${project.title} project cover`" />
-        </RouterLink>
+        </div>
         <div v-else class="project-cover cover-placeholder"><span>PROJECT ARCHIVE</span></div>
         <div class="card-copy">
           <h2>{{ project.title }}</h2>
