@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { getCategories, getProjects } from '../services/portfolioApi'
+import { getCategories, getProject, getProjects } from '../services/portfolioApi'
 import ProjectGallery from '../components/ProjectGallery.vue'
 import { locale } from '../locale'
 
@@ -16,7 +16,9 @@ async function load() {
     const categories = await getCategories()
     category.value = categories.find((item) => item.name === categoryNames[props.category]) || categories[0]
     const data = await getProjects({ category: category.value?.slug })
-    projects.value = data.results
+    projects.value = await Promise.all(data.results.map(async (project) => {
+      try { return await getProject(project.slug) } catch { return project }
+    }))
   } catch { error.value = true } finally { loading.value = false }
 }
 onMounted(load); watch(() => props.category, load)
@@ -58,7 +60,8 @@ const header = computed(() => {
             </div>
           </div>
         </div>
-        <div class="project-gallery gallery-placeholder" :aria-label="locale === 'en' ? 'Project gallery available in details' : '项目图库请查看详情'"><span>{{ locale === 'en' ? 'PROJECT GALLERY' : '项目图库' }}</span><i></i><i></i><i></i></div>
+        <ProjectGallery v-if="project.images?.length" :images="project.images.map((image) => image.image_url)" :project-name="project.title" />
+        <div v-else class="project-gallery gallery-placeholder" :aria-label="locale === 'en' ? 'Gallery coming soon' : '图库待补充'"><span>{{ locale === 'en' ? 'GALLERY COMING SOON' : '图库待补充' }}</span><i></i><i></i><i></i></div>
       </article>
     </section>
   </main>
