@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { getCategories, getProject, getProjects } from '../services/portfolioApi'
+import { getCategories, getProjects } from '../services/portfolioApi'
 import ProjectGallery from '../components/ProjectGallery.vue'
 import { locale } from '../locale'
 
@@ -18,9 +18,7 @@ async function load() {
     category.value = categories.find((item) => item.slug === categorySlugs[props.category]) || null
     if (!category.value) throw new Error('Category not found')
     const data = await getProjects({ category: category.value?.slug })
-    projects.value = await Promise.all(data.results.map(async (project) => {
-      try { return await getProject(project.slug) } catch { return project }
-    }))
+    projects.value = data.results
   } catch { error.value = true } finally { loading.value = false }
 }
 onMounted(load); watch(() => props.category, load)
@@ -30,6 +28,10 @@ const englishProjects = {
   fpv: [['Soldering Showcase', 'Electronic assembly, clean wiring, and soldering work for FPV systems.'], ['3-inch FPV Build', 'Structure, electronics, firmware, and PID tuning for a compact FPV platform.'], ['5-inch FPV Build', 'Complete assembly and flight-controller tuning for a standard 5-inch FPV platform.']],
 }
 const displayProjects = computed(() => projects.value.map((project, index) => locale.value === 'en' && englishProjects[props.category]?.[index] ? { ...project, title: englishProjects[props.category][index][0], summary: englishProjects[props.category][index][1] } : project))
+const galleryImages = (project) => {
+  const previews = (project.preview_images || []).map((image) => image.url).filter(Boolean).slice(0, 4)
+  return previews.length ? previews : (project.cover_image_url ? [project.cover_image_url] : [])
+}
 const header = computed(() => {
   const en = { cs: ['Computer Science', 'From local AI to real-time applications, focused on useful systems.'], design: ['Design', 'From modeling and printing to assembly and testing.'], fpv: ['FPV', 'From soldering to firmware and flight-controller tuning.'] }
   return locale.value === 'en' ? en[props.category] : [category.value?.name || '', category.value?.description || '']
@@ -62,7 +64,7 @@ const header = computed(() => {
             </div>
           </div>
         </div>
-        <ProjectGallery v-if="project.images?.length" :images="project.images.map((image) => image.image_url)" :project-name="project.title" />
+        <ProjectGallery v-if="galleryImages(project).length" :images="galleryImages(project)" :project-name="project.title" />
         <div v-else class="project-gallery gallery-placeholder" :aria-label="locale === 'en' ? 'Gallery coming soon' : '图库待补充'"><span>{{ locale === 'en' ? 'GALLERY COMING SOON' : '图库待补充' }}</span><i></i><i></i><i></i></div>
       </article>
     </section>
