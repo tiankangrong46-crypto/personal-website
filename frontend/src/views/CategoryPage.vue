@@ -9,12 +9,14 @@ const category = ref(null)
 const projects = ref([])
 const loading = ref(true)
 const error = ref(false)
-const categoryNames = { cs: 'CS', design: '设计', fpv: '穿越机' }
+const categorySlugs = { cs: 'cs', design: 'category-5', fpv: 'category-4' }
+const categoryKickers = { cs: 'CODE / SYSTEMS', design: 'DESIGN / FABRICATION', fpv: 'FPV / FIELD WORK' }
 async function load() {
   loading.value = true; error.value = false
   try {
     const categories = await getCategories()
-    category.value = categories.find((item) => item.name === categoryNames[props.category]) || categories[0]
+    category.value = categories.find((item) => item.slug === categorySlugs[props.category]) || null
+    if (!category.value) throw new Error('Category not found')
     const data = await getProjects({ category: category.value?.slug })
     projects.value = await Promise.all(data.results.map(async (project) => {
       try { return await getProject(project.slug) } catch { return project }
@@ -38,7 +40,7 @@ const header = computed(() => {
   <main class="page category-page">
     <section class="category-header">
       <RouterLink class="back-link" to="/showcase">{{ locale === 'en' ? '← Back to showcase' : '← 返回展示' }}</RouterLink>
-      <p class="eyebrow">{{ category.kicker }}</p>
+      <p class="eyebrow">{{ category?.kicker || categoryKickers[props.category] }}</p>
       <h1>{{ header[0] }}</h1>
       <p>{{ header[1] }}</p>
     </section>
@@ -56,7 +58,7 @@ const header = computed(() => {
             <p>{{ project.summary }}</p>
             <div class="stack-wrap">
               <span>{{ locale === 'en' ? 'TECH STACK' : 'TECH STACK / 技术栈' }}</span>
-              <ul class="stack-list" :aria-label="locale === 'en' ? 'Technology stack' : '技术栈'"><li v-for="item in project.stack" :key="item">{{ item }}</li></ul>
+              <ul class="stack-list" :aria-label="locale === 'en' ? 'Technology stack' : '技术栈'"><li v-for="item in (project.tech_stack || project.stack || [])" :key="item">{{ item }}</li></ul>
             </div>
           </div>
         </div>
