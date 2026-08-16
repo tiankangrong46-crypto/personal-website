@@ -122,9 +122,9 @@ h1 { font-family: 'Instrument Serif', 'Songti SC', serif; font-size: clamp(52px,
 .back-link:hover { color: #c85e7a; }
 .category-header h1 { margin-bottom: 28px; }
 .category-header > p:last-child { font-size: 16px; line-height: 1.8; margin: 0; max-width: 490px; }
-.project-cards { display: grid; gap: 78px; padding: 8vw 4.5vw; }
+.project-cards { display: grid; gap: 56px; padding: 6vw 4.5vw; }
 .project-card { background: #fff; border: 1px solid #edcdd6; border-radius: 50px; overflow: hidden; padding: clamp(16px, 2vw, 28px) clamp(16px, 2vw, 32px) 0; }
-.project-cover { aspect-ratio: 16 / 8.5; background: #f3d7df; border: 2px solid #a7cce2; border-radius: 50px; margin: 0 auto; max-width: 920px; overflow: hidden; }
+.project-cover { background: #f3d7df; border: 2px solid #a7cce2; border-radius: 50px; height: clamp(250px, 28vw, 420px); margin: 0 auto; max-width: 760px; overflow: hidden; width: 100%; }
 .project-cover img { display: block; height: 100%; object-fit: cover; transition: transform .35s ease; width: 100%; }
 .project-cover:hover img { transform: scale(1.055); }
 .cover-placeholder { align-items: center; background: linear-gradient(135deg, rgba(255,255,255,.72), rgba(232,162,180,.5)); display: flex; justify-content: center; }
@@ -216,8 +216,8 @@ h1 { font-family: 'Instrument Serif', 'Songti SC', serif; font-size: clamp(52px,
   .showcase-feature.is-reversed .feature-copy { order: 0; }.showcase-feature.is-reversed .feature-image { order: 1; }.feature-copy { max-width: 440px; }.feature-copy h2 { font-size: 36px; }
   .feature-image { aspect-ratio: 1.14; border-radius: 50px; max-width: none; width: 100%; }
   .category-header { padding: 40px 20px 68px; }.back-link { margin-bottom: 68px; }
-  .project-cards { gap: 46px; padding: 70px 20px; }.project-cover { aspect-ratio: 1 / .86; }
-  .project-card { padding: 14px 14px 0; }.project-cover { aspect-ratio: 1 / .86; }
+  .project-cards { gap: 38px; padding: 52px 20px; }.project-cover { height: clamp(220px, 58vw, 300px); }
+  .project-card { padding: 14px 14px 0; }
   .card-copy { display: block; padding: 28px 6px 24px; }.card-copy h2 { font-size: 39px; margin-bottom: 22px; }
   .card-details > p { font-size: 16px; line-height: 1.85; }.stack-wrap { margin-top: 24px; }.stack-list { margin-top: 13px; }.stack-list li { font-size: 12px; padding: 8px 9px; }
   .project-gallery { height: 240px; margin: 0; }.project-gallery img { top: calc(50% - 12px); width: 78vw; }
